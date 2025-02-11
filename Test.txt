@@ -1,2 +1,6 @@
 New TEST FILE
+<<<<<<< HEAD
 Add Changes of main into Test.txt
+=======
+Change Test.txt Inside
+>>>>>>> Feature/Login
