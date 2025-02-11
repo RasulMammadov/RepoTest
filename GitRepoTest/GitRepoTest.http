@@ -1,0 +1,6 @@
+@GitRepoTest_HostAddress = http://localhost:5199
+
+GET {{GitRepoTest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
