@@ -1,4 +1,6 @@
 
+using Serilog;
+
 namespace GitRepoTest
 {
     public class Program
@@ -8,6 +10,13 @@ namespace GitRepoTest
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Host.UseSerilog((context, config) =>
+            {
+                config.ReadFrom.Configuration(context.Configuration);
+            });
+
+            Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,6 +33,8 @@ namespace GitRepoTest
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSerilogRequestLogging();
 
             app.UseAuthorization();
 
