@@ -72,5 +72,16 @@ namespace GitRepoTest.Controllers
 
             return Ok(id);
         }
+
+
+        [HttpPost]
+        [Route("/FromBody")]
+        public IActionResult TestRoutes([FromBody] string? id, int name)
+        {
+
+            _logger.LogInformation("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+            return Ok(id);
+        }
     }
 }

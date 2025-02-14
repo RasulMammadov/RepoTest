@@ -1,9 +1,6 @@
 
-using GitRepoTest.Helpers.Filters;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
 using Serilog;
 
 namespace GitRepoTest
@@ -20,17 +17,29 @@ namespace GitRepoTest
             {
                 config.ReadFrom.Configuration(context.Configuration);
             });
-
             Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
 
-            builder.Services.AddControllers();
+            builder.Services.AddDirectoryBrowser();
+
+            builder.Services.AddMvcCore(opt =>
+            {
+              //  opt.SuppressInputFormatterBuffering = false;
+            });
+            builder.Services.AddControllers(opt =>
+            {
+                // opt.Filters.Add(IFilterMetadata customFilter);
+            })
+                .ConfigureApiBehaviorOptions(opt =>
+                {
+                    // opt.SuppressMapClientErrors = true;
+                    opt.SuppressModelStateInvalidFilter = true;
+                    opt.SuppressMapClientErrors = true;
+                });
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            builder.Services.AddSingleton<CustomResultFilter>();
-            builder.Services.AddSingleton<SingletonClassTest>();
-            builder.Services.AddAntiforgery();
 
 
             var app = builder.Build();
@@ -42,61 +51,40 @@ namespace GitRepoTest
                 app.UseSwaggerUI();
             }
 
+            var customConfiguration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            var defaultFileOptions = new DefaultFilesOptions();
+            defaultFileOptions.DefaultFileNames = customConfiguration.GetSection("DefaultFilesOptions").Get<List<string>>();
+
+            app.UseDefaultFiles(defaultFileOptions);
+            app.UseStaticFiles();
+            app.UseFileServer();
+
+            app.UseExceptionHandler(Exc =>
+            {
+                Exc.Run(async httpContext =>
+                {
+                    var error = httpContext.Features.GetRequiredFeature<IExceptionHandlerFeature>().Error.Message;
+
+                    await httpContext.Response.WriteAsync(error);
+                    return;
+                });
+            });
             app.UseHttpsRedirection();
 
-            /*app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseFileServer();*/
-            app.UseAntiforgery();
             app.UseSerilogRequestLogging();
 
             app.UseAuthorization();
 
 
-           
 
-
-            
-
-            app.UseCors(policy =>
-            {
-                policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
-            });
-            app.UseExceptionHandler(conf =>
-            {
-
-                conf.Run(async httpcontext =>
-                {
-                    IExceptionHandlerFeature exception = httpcontext.Features.Get<IExceptionHandlerFeature>(); //GetRequiredFeature<>
-                    httpcontext.Response.ContentType = "application/json";
-                    httpcontext.Response.StatusCode = StatusCodes.Status202Accepted;
-                    httpcontext.Response.Headers.Append("TestingException", "++++++++++++++++++++++++++");
-
-                    if (exception is null)
-                    {
-                        await httpcontext.Response.WriteAsJsonAsync(new { Problem = "I am Batman" });
-                        return;
-                    }
-                    await httpcontext.Response.WriteAsJsonAsync(exception.Error.StackTrace);
-                    return;
-                });
-            });
-            app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                // ...
-            });
-
-            app.MapGet("/Gettoli", (IWebHostEnvironment env, ILogger<Program> _logger) =>
-            {
-                string Value1 = @"Hello \nWorld ASFfg\tAze\rh\\df";
-                string Value2 = "File: \"Important\".pdf klbddfs";
-
-
-                Console.WriteLine("");
-                Console.WriteLine("++++++++++++++++");
-            });
             app.MapControllers();
+
+           // app.MapGrpcService<TestgRPC>();
+
             app.Run();
         }
     }
