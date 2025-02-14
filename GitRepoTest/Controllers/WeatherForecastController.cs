@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitRepoTest.Controllers
@@ -19,7 +20,7 @@ namespace GitRepoTest.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> GetWeatherForecast()
+        public IEnumerable<WeatherForecast> GetWeatherForecast([FromQuery] int age)
         {
             var value = Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -32,6 +33,13 @@ namespace GitRepoTest.Controllers
             _logger.LogError("GetWeatherForecast return value : {value}", value);
 
             return value;
+        }
+
+        [HttpPost]
+        [Route("/TestRouteValue/Test{Name:alpha}")]
+        public void Post(string Name)
+        {
+
         }
     }
 }
