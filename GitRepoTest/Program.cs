@@ -1,4 +1,4 @@
-
+using GitRepoTest.gRPC.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Serilog;
@@ -41,6 +41,7 @@ namespace GitRepoTest
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddGrpc();
 
             var app = builder.Build();
 
@@ -56,13 +57,14 @@ namespace GitRepoTest
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: false, reloadOnChange: true)
                 .Build();
 
+            #region Static Files.
             var defaultFileOptions = new DefaultFilesOptions();
             defaultFileOptions.DefaultFileNames = customConfiguration.GetSection("DefaultFilesOptions").Get<List<string>>();
 
             app.UseDefaultFiles(defaultFileOptions);
             app.UseStaticFiles();
             app.UseFileServer();
-
+            #endregion
             app.UseExceptionHandler(Exc =>
             {
                 Exc.Run(async httpContext =>
@@ -83,7 +85,7 @@ namespace GitRepoTest
 
             app.MapControllers();
 
-           // app.MapGrpcService<TestgRPC>();
+            app.MapGrpcService<TestGrpcService>();
 
             app.Run();
         }

@@ -1,5 +1,7 @@
 using GitRepoTest.Helpers.Attributes;
 using GitRepoTest.Helpers.Filters;
+using Grpc.Net.Client;
+using GitRepoTest.gRPC;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
@@ -80,6 +82,13 @@ namespace GitRepoTest.Controllers
         {
 
             _logger.LogInformation("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+
+            using var channel = GrpcChannel.ForAddress("https://localhost:7047");
+
+            var testchannel = new TestgRPC.TestgRPCClient(channel);
+
+          //  channel.TestgRPC
 
             return Ok(id);
         }
