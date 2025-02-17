@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "GitRepoTest.gRPC";
+
+service TestgRPC{ 
+	rpc TestBasics (TestRequestType) returns (TestResponseType);
+	rpc TestStreams (stream TestRequestType) returns (stream TestResponseType);
+}
+message TestRequestType{
+	int32 Age = 1;
+	string Name = 2;
+	string LastName = 3;
+}
+
+message TestResponseType{
+	int32 Age = 1;
+	string Name = 2;
+	string LastName = 3;
+}
