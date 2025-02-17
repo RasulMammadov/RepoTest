@@ -1,4 +1,9 @@
+using System.Reflection;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
 using GitRepoTest.gRPC.Services;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Serilog;
@@ -43,6 +48,23 @@ namespace GitRepoTest
 
             builder.Services.AddGrpc();
 
+            var currentDirectory = Environment.CurrentDirectory;
+
+            var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+
+            var directoryOfAssembly = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var mess = new Message();
+
+            var multimess = new MulticastMessage();
+
+
+            /*var defaultApp = FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "firebaseKey.json")),
+            });*/
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -62,8 +84,8 @@ namespace GitRepoTest
             defaultFileOptions.DefaultFileNames = customConfiguration.GetSection("DefaultFilesOptions").Get<List<string>>();
 
             app.UseDefaultFiles(defaultFileOptions);
-            app.UseStaticFiles();
-            app.UseFileServer();
+            app.UseStaticFiles().UseDirectoryBrowser(new DirectoryBrowserOptions());
+            app.UseFileServer(true);
             #endregion
             app.UseExceptionHandler(Exc =>
             {
