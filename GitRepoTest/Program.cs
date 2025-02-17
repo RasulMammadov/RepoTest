@@ -1,6 +1,7 @@
 using System.Reflection;
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
+using static GitRepoTest.gRPC.TestService;
 using GitRepoTest.gRPC.Services;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder.Extensions;
@@ -22,7 +23,6 @@ namespace GitRepoTest
             {
                 config.ReadFrom.Configuration(context.Configuration);
             });
-            Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
 
             builder.Services.AddDirectoryBrowser();
 
@@ -84,8 +84,7 @@ namespace GitRepoTest
             defaultFileOptions.DefaultFileNames = customConfiguration.GetSection("DefaultFilesOptions").Get<List<string>>();
 
             app.UseDefaultFiles(defaultFileOptions);
-            app.UseStaticFiles().UseDirectoryBrowser(new DirectoryBrowserOptions());
-            app.UseFileServer(true);
+           
             #endregion
             app.UseExceptionHandler(Exc =>
             {

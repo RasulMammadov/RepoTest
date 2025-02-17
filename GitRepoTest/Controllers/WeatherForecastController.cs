@@ -86,7 +86,7 @@ namespace GitRepoTest.Controllers
 
             using var channel = GrpcChannel.ForAddress("https://localhost:7047");
 
-            var testchannel = new TestgRPC.TestgRPCClient(channel);
+            var testchannel = new TestService.TestServiceClient(channel);
 
           //  channel.TestgRPC
 
