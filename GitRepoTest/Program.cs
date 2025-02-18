@@ -110,6 +110,8 @@ namespace GitRepoTest
 
             app.MapGrpcService<TestGrpcService>();
 
+            var id = Environment.GetEnvironmentVariable("APP_UID");
+
             app.Run();
         }
     }

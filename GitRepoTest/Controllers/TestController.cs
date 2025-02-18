@@ -22,5 +22,13 @@ namespace GitRepoTest.Controllers
             var request = HttpContext.Request;
             return Ok(new { Message = "this is post test method", Sender = "You do not need to know" });
         }
+
+        [HttpPost]
+        [Route("/Redirect")]
+        public IActionResult PostTest2()
+        {
+
+            return Redirect("https://localhost:7047/GetTest");
+        }
     }
 }
