@@ -24,7 +24,7 @@ namespace GitRepoTest
                 config.ReadFrom.Configuration(context.Configuration);
             });
 
-            builder.Services.AddDirectoryBrowser();
+         //   builder.Services.AddDirectoryBrowser();
 
             builder.Services.AddMvcCore(opt =>
             {
@@ -82,8 +82,10 @@ namespace GitRepoTest
             #region Static Files.
             var defaultFileOptions = new DefaultFilesOptions();
             defaultFileOptions.DefaultFileNames = customConfiguration.GetSection("DefaultFilesOptions").Get<List<string>>();
+            defaultFileOptions.RequestPath = "/Files";
 
             app.UseDefaultFiles(defaultFileOptions);
+            app.UseStaticFiles("/Files");
            
             #endregion
             app.UseExceptionHandler(Exc =>

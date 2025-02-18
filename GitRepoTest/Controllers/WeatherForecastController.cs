@@ -88,9 +88,31 @@ namespace GitRepoTest.Controllers
 
             var testchannel = new TestService.TestServiceClient(channel);
 
+            new Test.test2().getid();
+
           //  channel.TestgRPC
 
             return Ok(id);
+        }
+
+        public static class Test
+        {
+            public static int num = 25;
+
+
+            public class test2
+            {
+                public int id { get; set; }
+                public test2()
+                {
+                    id = 34;
+                }
+
+                public int getid()
+                {
+                    return id;
+                }
+            }
         }
     }
 }
