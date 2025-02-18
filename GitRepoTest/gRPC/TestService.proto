@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "GitRepoTest.gRPC";
+
+package name;
+
+service TestService
+{
+	rpc TestMethod1 (Testrequest) returns (TestResponse);
+}
+
+message Testrequest
+{
+	int32 Age = 1;
+	string Name = 2;
+}
+
+message TestResponse
+{
+	int32 Age = 1;
+	string Name = 2;
+}
