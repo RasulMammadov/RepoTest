@@ -55,6 +55,13 @@ namespace GitRepoTest
 
             var directoryOfAssembly = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
+            var directoryname2 = AppContext.BaseDirectory;
+
+
+            var directoryname3 = AppContext.TargetFrameworkName;
+
+
+
             var mess = new Message();
 
             var multimess = new MulticastMessage();
@@ -64,6 +71,8 @@ namespace GitRepoTest
             {
                 Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "firebaseKey.json")),
             });*/
+
+            builder.Services.AddSingleton<Singleton>();
 
             var app = builder.Build();
 
@@ -113,6 +122,11 @@ namespace GitRepoTest
             var id = Environment.GetEnvironmentVariable("APP_UID");
 
             app.Run();
+        }
+
+        public class Singleton
+        {
+            public int number = 13;
         }
     }
 }
