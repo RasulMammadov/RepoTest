@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Serilog;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GitRepoTest
 {
@@ -47,6 +49,12 @@ namespace GitRepoTest
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddGrpc();
+
+            builder.Services.AddScoped(typeof(ICheck<,>), typeof(Check<,>));
+
+
+            builder.Services.AddTransient<IMyService, FirstService>();
+            builder.Services.AddTransient<IMyService, SecondService>();
 
             var currentDirectory = Environment.CurrentDirectory;
 
@@ -112,7 +120,46 @@ namespace GitRepoTest
 
             var id = Environment.GetEnvironmentVariable("APP_UID");
 
+            app.MapGet("/GetTestDI", (HttpContext httpContext, IMyService myServices) =>
+            {
+                return IMyService.Id;
+            });
+
             app.Run();
         }
+
+        interface ICheck<T, @int>
+        {
+        }
+
+        class Check<T, TT> : ICheck<T, TT>
+        {
+        }
+        public interface IMyService
+        {
+            static int Id;
+            void Execute();
+        }
+
+        public class FirstService : IMyService
+        {
+            public FirstService()
+            {
+                IMyService.Id = 34;
+            }
+
+            public void Execute() => Console.WriteLine("First Service");
+        }
+
+        public class SecondService : IMyService
+        {
+            public SecondService()
+            {
+
+            }
+            public void Execute() => Console.WriteLine("Second Service");
+        }
+
+
     }
 }
