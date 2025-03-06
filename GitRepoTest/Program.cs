@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+
+=======
 using System.Reflection;
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
@@ -5,6 +8,7 @@ using static GitRepoTest.gRPC.TestService;
 using GitRepoTest.gRPC.Services;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder.Extensions;
+>>>>>>> af58e5457007201330dad52965d8752076456473
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Serilog;
@@ -28,6 +32,15 @@ namespace GitRepoTest
 
          //   builder.Services.AddDirectoryBrowser();
 
+            builder.Services.AddControllers()
+                .ConfigureApiBehaviorOptions(opt =>
+                {
+                   // opt.SuppressMapClientErrors = true;
+                    opt.SuppressModelStateInvalidFilter = true;
+                });
+=======
+            builder.Services.AddDirectoryBrowser();
+
             builder.Services.AddMvcCore(opt =>
             {
               //  opt.SuppressInputFormatterBuffering = false;
@@ -44,10 +57,13 @@ namespace GitRepoTest
                 });
 
 
+>>>>>>> af58e5457007201330dad52965d8752076456473
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+<<<<<<< HEAD
+=======
             builder.Services.AddGrpc();
 
             builder.Services.AddScoped(typeof(ICheck<,>), typeof(Check<,>));
@@ -72,6 +88,7 @@ namespace GitRepoTest
             {
                 Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "firebaseKey.json")),
             });*/
+>>>>>>> af58e5457007201330dad52965d8752076456473
 
             var app = builder.Build();
 
@@ -82,6 +99,11 @@ namespace GitRepoTest
                 app.UseSwaggerUI();
             }
 
+<<<<<<< HEAD
+            app.UseStaticFiles();
+            app.UseFileServer();
+
+=======
             var customConfiguration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: false, reloadOnChange: true)
@@ -96,6 +118,7 @@ namespace GitRepoTest
             app.UseStaticFiles("/Files");
            
             #endregion
+>>>>>>> af58e5457007201330dad52965d8752076456473
             app.UseExceptionHandler(Exc =>
             {
                 Exc.Run(async httpContext =>
@@ -112,6 +135,7 @@ namespace GitRepoTest
 
             app.UseAuthorization();
 
+         
 
 
             app.MapControllers();

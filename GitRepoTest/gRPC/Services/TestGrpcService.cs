@@ -17,14 +17,14 @@ namespace GitRepoTest.gRPC.Services
             public ref struct Test2
             {
                 public Test2()
-                {
+        {
                     
-                }
+        }
                 public void Test3()
                 {
-
-                }
-            }
+        
+    }
+}
         }
     }
 }

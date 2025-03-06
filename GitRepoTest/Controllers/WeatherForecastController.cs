@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+using System.Diagnostics.CodeAnalysis;
+=======
 using GitRepoTest.Helpers.Attributes;
 using GitRepoTest.Helpers.Filters;
 using Grpc.Net.Client;
@@ -6,6 +9,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.HttpResults;
+>>>>>>> af58e5457007201330dad52965d8752076456473
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
@@ -28,7 +32,7 @@ namespace GitRepoTest.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> GetWeatherForecast()
+        public IEnumerable<WeatherForecast> GetWeatherForecast([FromQuery] int age)
         {
 
             
@@ -47,6 +51,13 @@ namespace GitRepoTest.Controllers
             return value;
         }
 
+<<<<<<< HEAD
+        [HttpPost]
+        [Route("/TestRouteValue/Test{Name:alpha}")]
+        public void Post(string Name)
+        {
+
+=======
         [HttpGet]
         [Route("/CheckAttributes/")]
         // [TypeFilter<CustomResultFilter>]
@@ -93,6 +104,7 @@ namespace GitRepoTest.Controllers
           //  channel.TestgRPC
 
             return Ok(id);
+>>>>>>> af58e5457007201330dad52965d8752076456473
         }
 
         public static class Test
